@@ -131,23 +131,25 @@ class Box(object):
 class View(object):
     """Projection base class"""
     def __init__(self, width, height, box):
-        self.width = width
-        self.height = height
-        self.box = box
-        self.box.fix()
+        self.width = width #width of the viewport
+        self.height = height #height of the viewport
+        self.box = box #the dimensions of the model that all the data that goes to the viewport comes from
+        self.box.fix()#Gotta figure this one out still
 
     def x(self, x):
-        """Project x"""
+        """Project x"""#takes an x coordinate from a model and returns the corresponding x coordinate in a viewport
         if x is None:
-            return None
-        return self.width * (x - self.box.xmin) / self.box.width
+            return None #returns a None if the argument was a None
+        return self.width * (x - self.box.xmin) / self.box.width#width of viewport times a percentage of a viewport's width the x coordinate is from the left edge 
 
     def y(self, y):
-        """Project y"""
+        """Project y"""#takes a y coordinate from a model and returns a y coordinate for the viewport. 
+        #The axis is flipped though. If the input measure distance from the top the returned value measures distance from the top
+        #example: the model and viewport both have a height of 100, there is no offset, and 40 is the argument: returns 60.
         if y is None:
-            return None
-        return (self.height - self.height *
-                (y - self.box.ymin) / self.box.height)
+            return None #returns a None if the argument was a None
+        return (self.height - self.height * #the height of the viewport and the subtraction that flips which side the y coordinate is measured from.
+                (y - self.box.ymin) / self.box.height)#the percentage of a viewport's height a y coordinate is from one side
 
     def __call__(self, xy):
         """Project x and y"""
@@ -158,27 +160,27 @@ class View(object):
 class HorizontalView(View):
     def __init__(self, width, height, box):
         self._force_vertical = None
-        self.width = width
-        self.height = height
+        self.width = width #width of the viewport
+        self.height = height #height of the viewport
 
-        self.box = box
+        self.box = box #the dimensions of the model that all the data that goes to the viewport comes from
         self.box.fix()
-        self.box.swap()
+        self.box.swap() #swaps the x and y dimensions of the model
 
     def x(self, x):
         """Project x"""
         if x is None:
             return None
         if self._force_vertical:
-            return super(HorizontalView, self).x(x)
-        return super(HorizontalView, self).y(x)
+            return super(HorizontalView, self).x(x) #returns x coordinate as if this was the vertical view, but because box was swapped it might not return the right value.
+        return super(HorizontalView, self).y(x)#uses the .y() method from view to turn the x coordinate into a y coordinate
 
     def y(self, y):
         if y is None:
             return None
         if self._force_vertical:
-            return super(HorizontalView, self).y(y)
-        return super(HorizontalView, self).x(y)
+            return super(HorizontalView, self).y(y)#returns y coordinate as if this was the vertical view, but because box was swapped it might not return the right value.
+        return super(HorizontalView, self).x(y)#uses the .x() method from view to turn the y coordinate into a x coordinate
 
 
 class PolarView(View):

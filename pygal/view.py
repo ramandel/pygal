@@ -48,18 +48,18 @@ class Box(object):
     margin = .02
 
     def __init__(self, xmin=0, ymin=0, xmax=1, ymax=1):
-        self._xmin = xmin
-        self._ymin = ymin
-        self._xmax = xmax
-        self._ymax = ymax
+        self._xmin = xmin #the minimum x value that of a cartesian graph model that will be displayed
+        self._ymin = ymin #the minimum y value that of a cartesian graph model that will be displayed
+        self._xmax = xmax #the maximum x value that of a cartesian graph model that will be displayed
+        self._ymax = ymax #the maximum y value that of a cartesian graph model that will be displayed
 
     def set_polar_box(self, rmin=0, rmax=1, tmin=0, tmax=2 * pi):
-        self._rmin = rmin
-        self._rmax = rmax
-        self._tmin = tmin
-        self._tmax = tmax
-        self.xmin = self.ymin = rmin - rmax
-        self.xmax = self.ymax = rmax - rmin
+        self._rmin = rmin #the minimum distance from the center of a polar graph model that will be displayed
+        self._rmax = rmax #the maximum distance from the center of a polar graph model that will be displayed
+        self._tmin = tmin #the lowest angle value of a polar graph model that will be displayed
+        self._tmax = tmax #the lowest angle value of a polar graph model that will be displayed
+        self.xmin = self.ymin = rmin - rmax #sets minimum x and y value based off of rmin and rmax
+        self.xmax = self.ymax = rmax - rmin #sets maximum x and y value based off of rmin and rmax
 
     @property
     def xmin(self):
@@ -134,7 +134,7 @@ class View(object):
         self.width = width #width of the viewport
         self.height = height #height of the viewport
         self.box = box #the dimensions of the model that all the data that goes to the viewport comes from
-        self.box.fix()#Gotta figure this one out still
+        self.box.fix()#makes sure the box has a width and height and adds a small margin
 
     def x(self, x):
         """Project x"""#takes an x coordinate from a model and returns the corresponding x coordinate in a viewport
@@ -164,7 +164,7 @@ class HorizontalView(View):
         self.height = height #height of the viewport
 
         self.box = box #the dimensions of the model that all the data that goes to the viewport comes from
-        self.box.fix()
+        self.box.fix()#makes sure the box has a width and height and adds a small margin
         self.box.swap() #swaps the x and y dimensions of the model
 
     def x(self, x):
